@@ -157,7 +157,7 @@ class PostController extends Controller
 	 */
 	public function get(Request $request, $offset = 0)
 	{
-		$posts = Post::orderBy('created_at', 'desc')->skip($offset)->take(10)->select('id', 'title', 'image_1_id', 'image_2_id')->get();
+		$posts = Post::orderBy('created_at', 'desc')->skip($offset)->take(10)->select('id', 'title', 'image_1_id', 'image_2_id', 'image_1_votes', 'image_2_votes')->get();
 		
 		$outOfPosts = false;
 		if( count($posts) < 10 ) {
@@ -176,7 +176,7 @@ class PostController extends Controller
 	/**
 	 * Vote a post
 	 *
-	 * @param \Illuminate\Http\Request
+	 * @param \Illuminate\Http\Request, integer, integer
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -189,7 +189,7 @@ class PostController extends Controller
 		if( !$post ) {
     	return response()->json(['message' => 'Unable to find post. Incorrect request'], 404);
 		}
-		
+
 		// Check if user already voted on the post, if not make a new entry, else edit the old entry
 		$userVote = UsersVote::where('user_id', $user->id)->where('post_id', $postId)->first();
 		if( !$userVote ) {
@@ -203,9 +203,9 @@ class PostController extends Controller
 
     	// Increment the vote on the post
     	if( $newVote == 1 )
-    		$post->image_1_vote++; 
+    		$post->image_1_votes = $post->image_1_votes + 1; 
     	else if( $newVote == 2 )
-    		$post->image_2_vote++;
+    		$post->image_2_votes = $post->image_2_votes + 1;
   		$post->save();
 
 		} else {
@@ -216,17 +216,22 @@ class PostController extends Controller
 			$oldVote = $userVote->vote;
 			if( $oldVote != $newVote ) {
 
+				// Edit user vote entry of the post
+				$userVote = UsersVote::where('user_id', $user->id)->where('post_id', $postId)->first();
+				$userVote->vote = $newVote;
+				$userVote->save();
+
 				// Decrement the vote from the old vote
 				if( $oldVote == 1 )
-	    		$post->image_1_vote--; 
+	    		$post->image_1_votes = $post->image_1_votes - 1;
 	    	else if( $oldVote == 2 )
-	    		$post->image_2_vote--;
+	    		$post->image_2_votes = $post->image_2_votes - 1;
 	  		
 	  		// Increment the new vote
 				if( $newVote == 1 )
-	    		$post->image_1_vote++; 
+	    		$post->image_1_votes = $post->image_1_votes + 1;
 	    	else if( $newVote == 2 )
-	    		$post->image_2_vote++;
+	    		$post->image_2_votes = $post->image_2_votes + 1;
 
 	    	// Save the voted post
 	  		$post->save();
