@@ -155,8 +155,12 @@ class PostController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function get(Request $request, $offset = 0)
+	public function get(Request $request)
 	{
+		$offset = 0;
+		if($request->has('offset'))
+			$offset = $request->offset;
+
 		$posts = Post::orderBy('created_at', 'desc')->skip($offset)->take(10)->select('id', 'title', 'image_1_id', 'image_2_id', 'image_1_votes', 'image_2_votes')->get();
 		
 		$outOfPosts = false;

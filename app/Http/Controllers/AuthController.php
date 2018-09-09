@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserVerification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -46,6 +47,10 @@ class AuthController extends Controller
 			return response()->json(['message' => "Incorrect login."], 404);
 		if (!Hash::check($request->input('password'), $user->password))
 			return response()->json(['message' => "Incorrect login."], 404);
+
+		// Check if user is verified
+		if (!$user->isVerified)
+			return response()->json(['message' => "The email is not verified."], 404);
 
 		// Create and return JWT to user, signed with user id
 		try {
@@ -113,5 +118,28 @@ class AuthController extends Controller
 				'userId'=> $user->id,
 			]
 		], 200);
+	}
+
+	/**
+	 * Check user login is valid and active
+	 *
+	 * @param \Illuminate\Http\Request
+	 *
+	 * @return mixed 
+	 */
+	public function verify(Request $request, $verificationCode)
+	{
+		$userVerification = UserVerification::where('code', $verificationCode)->first();
+
+		$user = User::find($userVerification->user_id);
+
+		if( !$user ) {
+			return response()->json(['message' => "Cannot verify user or user does not exist."], 422);
+		}
+
+		$user->isVerified = true;
+		$user->save();
+
+		return response()->json(['message' => "Verification success!"], 200);
 	}
 }

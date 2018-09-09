@@ -19,7 +19,10 @@ $router->post('register', 'RegisterController@register');
 
 $router->get('login', 		'AuthController@login');
 
-$router->get('posts[/{offset}]', 		'PostController@get');
+$router->get('posts', 							'PostController@get');
+$router->get('images/{imageId}', 		'ImageController@get');
+$router->get('verification/{verificationCode}', 		'AuthController@verify');
+
 
 // JWT protected routes
 $router->group(['middleware' => ['jwt', 'user']], function () use ($router) {

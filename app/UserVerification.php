@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model 
+class UserVerification extends Model 
 {
 
 	/**
@@ -16,7 +16,7 @@ class User extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'email', 'lastLogin','password', 'isVerified'
+		'user_id', 'code'
 	];
 
 	/**
@@ -27,13 +27,4 @@ class User extends Model
 	protected $hidden = [
 	
 	];
-
-	/**
-	 * Hash user password.
-	 *
-	 * @var string
-	 */
-	public function setPasswordAttribute($pass){
-		$this->attributes['password'] = Hash::make($pass);
-	}
 }

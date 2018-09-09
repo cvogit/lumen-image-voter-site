@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
 			$table->increments('id');
 			$table->string('email', 64)->unique();
 			$table->string('password', 64);
+			$table->boolean('isVerified')->default(false);
 			$table->string('lastLogin');
 			$table->timestampsTz();
 		});
