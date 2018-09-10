@@ -11,8 +11,9 @@
 |
 */
 
+$router->get('test', 		'RegisterController@test');
 $router->get('/', function () {
-    return "Hello";
+    return "Lumen image voting server.";
 });
 
 $router->post('register', 'RegisterController@register');

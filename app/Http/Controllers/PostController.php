@@ -161,7 +161,7 @@ class PostController extends Controller
 		if($request->has('offset'))
 			$offset = $request->offset;
 
-		$posts = Post::orderBy('created_at', 'desc')->skip($offset)->take(10)->select('id', 'title', 'image_1_id', 'image_2_id', 'image_1_votes', 'image_2_votes')->get();
+		$posts = Post::orderBy('id', 'desc')->skip($offset)->paginate(10);
 		
 		$outOfPosts = false;
 		if( count($posts) < 10 ) {
@@ -171,8 +171,7 @@ class PostController extends Controller
 	  return response()->json([
 	  	'message' 	=> 'Posts fetch succesfully',
 	  	'result'	 	=> [
-	  			'posts' => $posts,
-	  			'end' 	=> $outOfPosts
+	  			'posts' => $posts
 	  		]
 	  	], 200);
 	}

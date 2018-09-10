@@ -9,8 +9,10 @@
         "laravel/lumen-framework": "5.5.*",
         "vlucas/phpdotenv": "~2.2",
         "predis/predis": "^1.1",
-        "illuminate/redis": "^5.4",
-        "cvogit/lumen-jwt": "^1.0.3"
+        "illuminate/redis": "^5.5",
+        "cvogit/lumen-jwt": "^1.0.3",
+        "illuminate/mail": "5.5.2",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

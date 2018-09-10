@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -43,7 +44,7 @@ class RegisterController extends Controller
 	public function register(Request $request)
 	{
 		$data = $request->all();
-		
+
 		$validation = $this->validator($data);
 		if($validation->fails())
 			return response()->json(["message" => $validation->errors()], 500);
@@ -63,6 +64,14 @@ class RegisterController extends Controller
 			'user_id' => $user->id,
 			'code' 		=> $code
 			]);
+
+		// Send verification email
+		$message = 'Welcome to DisoDat'."\r\n".'Click on the link to activate your account'."\r\n".env('CLIENT_ADDRESS').'verification/'.$code;
+		$email = $request->email;
+		Mail::raw($message, function($msg) use ($email) { 
+      $msg->to($email);
+      $msg->subject('DisoDat verification');
+    });
 
 		return response()->json(['message' => "Registration successful. Please check your email to activate the account."], 200);
 	}
