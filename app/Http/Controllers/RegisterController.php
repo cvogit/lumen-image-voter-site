@@ -95,4 +95,8 @@ class RegisterController extends Controller
 			'password'  => 'required|string|min:6|confirmed',
 		]);
 	}
+
+	public function test(Request $request) {
+		return "test";
+	}
 }

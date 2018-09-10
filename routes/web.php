@@ -22,7 +22,7 @@ $router->get('login', 		'AuthController@login');
 
 $router->get('posts', 							'PostController@get');
 $router->get('images/{imageId}', 		'ImageController@get');
-$router->get('verification/{verificationCode}', 		'AuthController@verify');
+$router->put('verification/{verificationCode}', 		'AuthController@verify');
 
 
 // JWT protected routes
