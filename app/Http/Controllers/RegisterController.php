@@ -73,6 +73,13 @@ class RegisterController extends Controller
       $msg->subject('DisoDat verification');
     });
 
+    // Send email to admin notifyng new user registration
+    $adminEmail = env('ADMIN_ADDRESS');
+    Mail::raw('New user signed up', function($msg) use ($adminEmail) { 
+      $msg->to($adminEmail);
+      $msg->subject('DisoDat sign up');
+    });
+
 		return response()->json(['message' => "Registration successful. Please check your email to activate the account."], 200);
 	}
 
